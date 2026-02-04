@@ -10,7 +10,12 @@
   <artifactId>spring-petclinic</artifactId>
   <version>4.0.0-SNAPSHOT</version>
   <name>petclinic</name>
-
+  <scm>
+    <connection>scm:git:https://github.com/kfialkowski-gd/spring-petclinic.git</connection>
+    <developerConnection>scm:git:git@github.com:kfialkowski-gd/spring-petclinic.git</developerConnection>
+    <url>https://github.com/kfialkowski-gd/spring-petclinic</url>
+    <tag>HEAD</tag>
+  </scm>
   <properties>
     <!-- Generic properties -->
     <java.version>17</java.version>
