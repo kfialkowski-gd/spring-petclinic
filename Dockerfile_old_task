@@ -1,0 +1,22 @@
+FROM eclipse-temurin:17.0.18_8-jdk-ubi9-minimal AS builder
+WORKDIR /app
+
+COPY pom.xml . 
+COPY .mvn/ ./.mvn
+COPY mvnw .
+RUN chmod +x mvnw && ./mvnw dependency:go-offline
+COPY src/ ./src
+RUN ./mvnw clean package -DskipTests
+
+FROM eclipse-temurin:17.0.18_8-jre-ubi9-minimal AS final
+
+RUN groupadd --system --gid 1001 appuser && adduser --system --uid 1001 --gid 1001 appuser
+WORKDIR /app
+
+COPY --from=builder --chown=appuser:appuser /app/target/*.jar /app/app.jar
+
+EXPOSE 8080
+USER 1001
+
+ENTRYPOINT ["java"]
+CMD ["-jar","app.jar"]
