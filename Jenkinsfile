@@ -135,7 +135,9 @@ pipeline {
             echo "Pipeline failed. Check stage logs above."
         }
         cleanup {
-            cleanWs()
+			node('docker-agent'){
+            	cleanWs()
+			}
         }
     }
 }
