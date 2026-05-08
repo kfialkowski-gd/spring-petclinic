@@ -69,6 +69,7 @@ jobs:
         id: infra
         run: |
           echo "acr=$(az acr list -g $RG --query "[0].name" -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "vm=$(az vm list -g $RG --query "[0].name" -o tsv)" >> "$GITHUB_OUTPUT"
           echo "mysql_host=$(az mysql flexible-server list -g $RG \
             --query "[0].fullyQualifiedDomainName" -o tsv)" >> "$GITHUB_OUTPUT"
           echo "mysql_user=$(az mysql flexible-server list -g $RG \
@@ -78,13 +79,14 @@ jobs:
         env:
           VERSION:    ${{ needs.release.outputs.version }}
           ACR:        ${{ steps.infra.outputs.acr }}
+          VM:         ${{ steps.infra.outputs.vm }}
           MYSQL_HOST: ${{ steps.infra.outputs.mysql_host }}
           MYSQL_USER: ${{ steps.infra.outputs.mysql_user }}
           MYSQL_PASS: ${{ secrets.MYSQL_PASSWORD }}
         run: |
           az vm run-command invoke \
             --resource-group $RG \
-            --name vm-petclinic \
+            --name $VM \
             --command-id RunShellScript \
             --query "value[0].message" -o tsv \
             --scripts "
